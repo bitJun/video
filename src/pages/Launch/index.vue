@@ -9,6 +9,7 @@
         :src="titleImg"
         class="title"
       />
+      <div class="enter" @click="onEnter()">Enter</div>
     </div>
   </div>
 </template>
@@ -28,9 +29,9 @@
     window.addEventListener("resize", ()=>{
       resize();
     });
-    setTimeout(()=>{
-      router.push('/video')
-    }, 3000);
+    // setTimeout(()=>{
+    //   router.push('/video')
+    // }, 3000);
   })
 
   const checkOrientation = () => {
@@ -45,6 +46,10 @@
     if (type == 'portrait') {
 
     }
+  }
+
+  const onEnter = () => {
+    router.push('/video')
   }
 </script>
 <style lang="less" scoped>
@@ -63,6 +68,19 @@
   bottom: 52px;
   left: 0;
 }
+.enter {
+  position: absolute;
+  right: 20px;
+  bottom: 20px;
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 120px;
+  height: 36px;
+  border-radius: 75px;
+  background-color: orange;
+}
 @media screen and (orientation: portrait) {
   .main {
     transform-origin:top left;
@@ -76,6 +94,13 @@
     object-fit: cover;
     width: 100vh !important;
     height: 100vw !important; 
+  }
+  .enter {
+    position: absolute;
+    right: 80px;
+    bottom: 80px;
+    height: 60px;
+    width: 180px;
   }
 } 
 @media screen and (orientation: landscape) {
