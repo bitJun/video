@@ -6,7 +6,7 @@
       <SwiperSlide class="box" v-for="(item, index) in list" :key="index">
         <img
           :src="item.url"
-          class="img"
+          class="img" 
         />
       </SwiperSlide>
       <SwiperSlide>
