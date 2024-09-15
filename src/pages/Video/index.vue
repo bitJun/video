@@ -1,7 +1,7 @@
 <template>
   <div class="main">
     <Swiper
-      :direction="windowType == 'portrait' ? 'horizontal' : 'vertical'"
+      :direction="'horizontal'"
     >
       <SwiperSlide class="box" v-for="(item, index) in list" :key="index">
         <img
