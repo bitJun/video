@@ -1,7 +1,7 @@
 <template>
   <div class="main">
     <Swiper
-      :direction="'vertical'"
+      :direction="windowType == 'portrait' ? 'horizontal' : 'vertical'"
     >
       <SwiperSlide class="box" v-for="(item, index) in list" :key="index">
         <img
@@ -124,6 +124,7 @@
     4: postcard4,
     5: postcard5,
   })
+  const windowType = ref('');
 
   const height = ref(0);
   const width = ref(0);
@@ -170,10 +171,7 @@
 
   const resize = () => {
     let type = checkOrientation();
-    // windowType.value = type;
-    // if (type == 'portrait') {
-
-    // }
+    windowType.value = type;
   }
 
   const onChoose = () => {

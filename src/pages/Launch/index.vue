@@ -90,6 +90,9 @@
     position: absolute;
     top: 0;
   }
+  .title {
+    bottom: 100px;
+  }
   .box .coverImg {
     object-fit: cover;
     width: 100vh !important;
