@@ -3,11 +3,19 @@
     <Swiper
       :direction="'horizontal'"
     >
-      <SwiperSlide class="box" v-for="(item, index) in list" :key="index">
+      <!-- <SwiperSlide class="box" v-for="(item, index) in list" :key="index">
         <img
           :src="item.url"
-          class="img" 
+          class="img"
         />
+      </SwiperSlide> -->
+      <SwiperSlide class="box">
+        <div class="info">
+          <img
+            :src="windowType == 'portrait' ? bg : bgInfo"
+            class="img"
+          />
+        </div>
       </SwiperSlide>
       <SwiperSlide>
         <div class="box">
@@ -92,6 +100,8 @@
   import listImg from '@/assets/images/list.png';
   import check from '@/assets/images/check.png';
   import uncheck from '@/assets/images/uncheck.png';
+  import bgInfo from '@/assets/images/bgInfo.jpg';
+  import bg from '@/assets/images/bgInfo.jpg';
   const show = ref(true);
   const blessList = ref([
     {
@@ -157,15 +167,11 @@
     window.addEventListener("resize", ()=>{
       resize();
     });
-    setTimeout(()=>{
-      router.push('/video')
-    }, 3000);
   })
 
   const checkOrientation = () => {
     width.value = window.innerWidth;
     height.value = window.innerHeight;
-    console.log('window.innerHeight', window.innerHeight)
     return width.value > height.value? 'landscape' : 'portrait';
   }
 
@@ -190,10 +196,11 @@
 <style lang="less" scoped>
 .box {
   position: relative;
+  width: auto;
 }
 .img {
   object-fit: cover;
-  width: 100vw;
+  // width: 100vw;
   height: 100vh;
 }
 .title {
@@ -258,6 +265,9 @@
   width: 136px;
   height: 63px;
 }
+.info {
+  overflow: scroll;
+}
 @media screen and (orientation: portrait) {
   .main {
     transform-origin:top left;
@@ -270,7 +280,6 @@
   }
   .img {
     object-fit: cover;
-    width: 100vh !important;
     height: 100vw !important; 
   }
   .msgList {
