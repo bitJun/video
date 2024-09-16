@@ -1,7 +1,9 @@
 <template>
+  <!-- horizontal -->
   <div class="main">
     <Swiper
-      :direction="'horizontal'"
+    
+      :direction="windowType == 'portrait' ? 'vertical' : 'horizontal'"
     >
       <!-- <SwiperSlide class="box" v-for="(item, index) in list" :key="index">
         <img
@@ -12,13 +14,23 @@
       <SwiperSlide class="box">
         <div class="info">
           <img
-            :src="windowType == 'portrait' ? bg : bgInfo"
+            v-if="windowType == 'portrait'"
+            :src="bg"
+            class="portraitimg"
+          />
+          <img
+            v-else
+            :src="bgInfo"
             class="img"
           />
+          <!-- <img
+            :src="windowType == 'portrait' ? bg : bgInfo"
+            :class="[windowType == 'portrait' ? 'portraitimg' : 'img']"
+          /> -->
         </div>
       </SwiperSlide>
       <SwiperSlide>
-        <div class="box">
+        <div class="box portrait">
           <img
             :src="blessImg[blessId]"
             class="img"
@@ -100,7 +112,7 @@
   import listImg from '@/assets/images/list.png';
   import check from '@/assets/images/check.png';
   import uncheck from '@/assets/images/uncheck.png';
-  import bgInfo from '@/assets/images/bgInfo.jpg';
+  import bgInfo from '@/assets/images/bg.jpg';
   import bg from '@/assets/images/bgInfo.jpg';
   const show = ref(true);
   const blessList = ref([
@@ -270,6 +282,9 @@
 }
 @media screen and (orientation: portrait) {
   .main {
+    
+  }
+  .portrait {
     transform-origin:top left;
     transform: rotate(90deg) translateY(-100%);
     width: 100vh !important;
@@ -281,6 +296,13 @@
   .img {
     object-fit: cover;
     height: 100vw !important; 
+  }
+  .portraitimg {
+    width: 100% !important;
+  }
+  .info {
+    overflow-y: scroll;
+    height: 100%;
   }
   .msgList {
     position: absolute;
