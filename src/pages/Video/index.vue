@@ -5,32 +5,71 @@
     
       :direction="windowType == 'portrait' ? 'vertical' : 'horizontal'"
     >
-      <!-- <SwiperSlide class="box" v-for="(item, index) in list" :key="index">
-        <img
-          :src="item.url"
-          class="img"
-        />
-      </SwiperSlide> -->
       <SwiperSlide class="box">
-        <div class="info">
+        <div class="info" v-if="windowType == 'portrait'">
           <img
-            v-if="windowType == 'portrait'"
             :src="bg"
             class="portraitimg"
+            @load="onLoadImg"
           />
+        </div>
+        <div v-else class="info">
           <img
-            v-else
             :src="bgInfo"
             class="img"
           />
-          <!-- <img
-            :src="windowType == 'portrait' ? bg : bgInfo"
-            :class="[windowType == 'portrait' ? 'portraitimg' : 'img']"
-          /> -->
         </div>
       </SwiperSlide>
       <SwiperSlide>
-        <div class="box portrait">
+        <div class="box" v-if="windowType == 'portrait'">
+          <img
+            :src="blessportraitImg[blessId]"
+            class="img"
+            v-if="blessId"
+          />
+          <div class="action">
+            <img
+              :src="share"
+              class="action_item"
+              v-if="blessId"
+            />
+          </div>
+          <img
+            :src="emptyportrait"
+            class="img"
+            v-if="!blessId"
+          />
+          <div class="action" v-if="show">
+            <img
+              :src="choose"
+              class="action_item"
+              @click="onChoose()"
+            />
+          </div>
+          <div class="msgList rotate" v-if="!show && !blessId">
+            <h4>选择祝福语:</h4>
+            <div
+              class="msgListItem"
+              v-for="item in blessList"
+              :key="item.id"
+              @click="onChooseMsg(item.id)"
+            >
+              <img
+                :src="item.id == id ? check : uncheck"
+                class="icon"
+              />
+              {{item.name}}
+            </div>
+            <div class="actions">
+              <img
+                :src="submit"
+                class="actions_item"
+                @click="onSubmit()"
+              />
+            </div>
+          </div>
+        </div>
+        <div class="box" v-else>
           <img
             :src="blessImg[blessId]"
             class="img"
@@ -101,11 +140,17 @@
   import img6 from '@/assets/images/img6.png';
   import img7 from '@/assets/images/img7.png';
   import empty from '@/assets/images/empty.png';
+  import emptyportrait from '@/assets/images/emptyportrait.png';
   import postcard1 from '@/assets/images/postcard1.png';
   import postcard2 from '@/assets/images/postcard2.png';
   // import postcard3 from '@/assets/images/postcard3.png';
   import postcard4 from '@/assets/images/postcard4.png';
   import postcard5 from '@/assets/images/postcard5.png';
+  import postcardportrait1 from '@/assets/images/postcardportrait1.png';
+  import postcardportrait2 from '@/assets/images/postcardportrait2.png';
+  // import postcardportrait3 from '@/assets/images/postcardportrait3.png';
+  import postcardportrait4 from '@/assets/images/postcardportrait4.png';
+  import postcardportrait5 from '@/assets/images/postcardportrait5.png';
   import submit from '@/assets/images/submit.png';
   import choose from '@/assets/images/choose.png';
   import share from '@/assets/images/share.png';
@@ -145,11 +190,20 @@
     3: postcard1,
     4: postcard4,
     5: postcard5,
-  })
+  });
+
+  const blessportraitImg = ref({
+    1: postcardportrait1,
+    2: postcardportrait2,
+    3: postcardportrait1,
+    4: postcardportrait4,
+    5: postcardportrait5,
+  });
   const windowType = ref('');
 
   const height = ref(0);
   const width = ref(0);
+  const imgHeight = ref(0);
 
   const list = ref([
     {
@@ -181,6 +235,12 @@
     });
   })
 
+  const onLoadImg = (e) => {
+    console.log('e', e.target.width)
+    console.log('e', e.target.height)
+    imgHeight.value = e.target.height;
+  }
+
   const checkOrientation = () => {
     width.value = window.innerWidth;
     height.value = window.innerHeight;
@@ -203,7 +263,6 @@
   const onChooseMsg = (val) => {
     id.value = val;
   }
-
 </script>
 <style lang="less" scoped>
 .box {
@@ -212,7 +271,7 @@
 }
 .img {
   object-fit: cover;
-  // width: 100vw;
+  width: 100vw;
   height: 100vh;
 }
 .title {
@@ -279,6 +338,7 @@
 }
 .info {
   overflow: scroll;
+  width: 100%;
 }
 @media screen and (orientation: portrait) {
   .main {
@@ -293,10 +353,6 @@
     overflow-y: scroll;
     top: 0;
   }
-  .img {
-    object-fit: cover;
-    height: 100vw !important; 
-  }
   .portraitimg {
     width: 100% !important;
   }
@@ -306,13 +362,14 @@
   }
   .msgList {
     position: absolute;
-    top: 474px;
-    right: 18px;
+    bottom: -400px;
+    left: -760px;
     width: 368px;
   }
   .action {
-    right: 36px;
-    bottom: 32px;
+    bottom: -400px;
+    left: -560px;
+    transform: rotate(90deg);
   }
   .actions_item,
   .action_item {
@@ -345,6 +402,9 @@
     padding-right: 64px;
   }
 } 
+.rotate {
+  transform: rotate(90deg);
+}
 @media screen and (orientation: landscape) {
   /*横屏...*/
 }
