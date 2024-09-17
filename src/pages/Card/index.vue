@@ -1,21 +1,10 @@
 <template>
+  <!-- horizontal -->
   <div
-    :class="[windowType == 'portrait' ? 'container' : 'main']"
-    ref="scrollContainer"
+    class="main" 
+    ref="refreshContainer"
   >
-    <div v-if="!visable">
-      <img
-        :src="bg"
-        v-if="windowType == 'portrait'"
-        class="portraitimg"
-      />
-      <img
-        v-else
-        :src="bgInfo"
-        class="horizontalimg"
-      />
-    </div>
-    <div v-else>
+    <div ref="content">
       <div class="box" v-if="windowType == 'portrait'">
         <img
           :src="blessportraitImg[blessId]"
@@ -122,8 +111,10 @@
   </div>
 </template>
 <script setup>
-  import { ref, onMounted, onUnmounted, nextTick } from 'vue';
-  import { useRouter } from 'vue-router';
+  import { Swiper, SwiperSlide } from 'swiper/vue';
+  // Import Swiper styles
+  import 'swiper/css';
+  import { ref, onMounted, onUnmounted } from 'vue';
   import img1 from '@/assets/images/img1.png';
   import img2 from '@/assets/images/img2.png';
   import img3 from '@/assets/images/img3.png';
@@ -151,10 +142,7 @@
   import uncheck from '@/assets/images/uncheck.png';
   import bgInfo from '@/assets/images/bg.jpg';
   import bg from '@/assets/images/bgInfo.jpg';
-  const router = useRouter();
   const show = ref(true);
-  const visable = ref(false);
-  const scrollContainer = ref(null);
   const blessList = ref([
     {
       id: 1,
@@ -222,22 +210,87 @@
     {
       url: img7
     }
-  ])
+  ]);
 
-  onUnmounted(() => {
-    scrollContainer.value = window.removeEventListener('scroll', handleScroll);
-  });
+  const scrollContainer = ref(null);
+  const refreshContainer = ref(null);
+  const content = ref(null);
+  const refreshing = ref(false);
+  const pullingDown = ref(false);
+  const startY = ref(0);
+  const currentY = ref(0);
 
-  onMounted(()=>{
+  const handleTouchStart = (event) => {
+    startY.value = event.touches[0].clientY;
+    pullingDown.value = false;
+  };
+
+  const handleTouchMove = (event) => {
+    event.preventDefault(); // 阻止默认行为
+
+    currentY.value = event.touches[0].clientY;
+    const deltaY = startY.value - currentY.value;
+
+    if (deltaY > 50 && !refreshing.value) {
+      pullingDown.value = true;
+      refreshContainer.value.style.transform = `translateY(${deltaY}px)`;
+    } else {
+      pullingDown.value = false;
+      refreshContainer.value.style.transform = 'translateY(0)';
+    }
+  };
+
+  const handleTouchEnd = () => {
+    refreshContainer.value.style.transform = 'translateY(0)';
+    if (pullingDown.value) {
+      refreshing.value = true;
+      pullToRefresh();
+    }
+    pullingDown.value = false;
+  };
+
+  const pullToRefresh = async () => {
+    // 模拟刷新数据
+    await new Promise((resolve) => setTimeout(resolve, 1000));
+    refreshing.value = false;
+    // 更新数据...
+  };
+
+  onMounted(() => {
     resize();
-    scrollContainer.value.addEventListener('scroll', handleScroll);
     window.addEventListener("resize", ()=>{
       resize();
     });
-  })
+    if (refreshContainer.value && content.value) {
+      content.value.addEventListener('touchstart', handleTouchStart);
+      content.value.addEventListener('touchmove', handleTouchMove);
+      content.value.addEventListener('touchend', handleTouchEnd);
+    }
+  });
+
+  onUnmounted(() => {
+    if (content.value) {
+      content.value.removeEventListener('touchstart', handleTouchStart);
+      content.value.removeEventListener('touchmove', handleTouchMove);
+      content.value.removeEventListener('touchend', handleTouchEnd);
+    }
+  });
+  
+  // onUnmounted(() => {
+  //   scrollContainer.value = window.removeEventListener('scroll', handleScroll);
+  // });
+
+  // onMounted(()=>{
+  //   resize();
+  //   scrollContainer.value.addEventListener('scroll', handleScroll);
+  //   window.addEventListener("resize", ()=>{
+  //     resize();
+  //   });
+  // })
 
   const handleScroll = () => {
     const { scrollTop, clientHeight, scrollHeight } = scrollContainer.value;
+    console.log('scrollTop', scrollTop)
     if (scrollTop + clientHeight >= scrollHeight - 20) {
       setTimeout(()=>{
         router.push('/card')
@@ -247,6 +300,11 @@
     if (scrollTop == 0) {
     }
   };
+  const onLoadImg = (e) => {
+    console.log('e', e.target.width)
+    console.log('e', e.target.height)
+    imgHeight.value = e.target.height;
+  }
 
   const checkOrientation = () => {
     width.value = window.innerWidth;
@@ -272,5 +330,151 @@
   }
 </script>
 <style lang="less" scoped>
-@import url('./index.less');
+.box {
+  position: relative;
+  width: auto;
+}
+.img {
+  object-fit: cover;
+  width: 100vw;
+  height: 100vh;
+}
+.title {
+  width: 100%;
+  height: auto;
+  position: absolute;
+  bottom: 52px;
+  left: 0;
+}
+.main {
+  display: flex;
+  flex-direction: row;
+  height: 100vh;
+  width: 100vw;
+  overflow-y: hidden;
+}
+.action {
+  position: absolute;
+  right: 18px;
+  bottom: 16px;
+}
+.action_item {
+  width: 136px;
+  height: 63px;
+}
+.msgList {
+  position: absolute;
+  top: 74px;
+  right: 18px;
+  width: 368px;
+}
+.msgList h4 {
+  padding-right: 64px;
+  height: 25px;
+  font-family: PingFangSC, PingFang SC;
+  font-weight: 500;
+  font-size: 16px;
+  line-height: 25px;
+  margin-bottom: 9px;
+}
+.msgListItem {
+  display: flex;
+  align-items: center;
+  height: 25px;
+  margin-bottom: 6px;
+  font-family: PingFangSC, PingFang SC;
+  font-weight: 500;
+  font-size: 16px;
+  color: #333333;
+  padding-right: 64px;
+}
+.icon {
+  width: 17px;
+  height: 17px;
+  margin-right: 7px;
+}
+.actions {
+  display: flex;
+  justify-content: flex-end;
+}
+.actions_item {
+  width: 136px;
+  height: 63px;
+}
+.info {
+  overflow: scroll;
+  width: 100%;
+}
+.fullimg {
+  width: auto;
+  height: 100vh;
+}
+@media screen and (orientation: portrait) {
+  .main {
+    
+  }
+  .portrait {
+    transform-origin:top left;
+    transform: rotate(90deg) translateY(-100%);
+    width: 100vh !important;
+    height: 100vw !important; 
+    position: absolute;
+    overflow-y: scroll;
+    top: 0;
+  }
+  .portraitimg {
+    width: 100% !important;
+  }
+  .info {
+    overflow-y: scroll;
+    height: 100%;
+  }
+  .msgList {
+    position: absolute;
+    bottom: -400px;
+    left: -760px;
+    width: 368px;
+  }
+  .action {
+    bottom: -400px;
+    left: -560px;
+    transform: rotate(90deg);
+  }
+  .actions_item,
+  .action_item {
+    width: 272px;
+    height: 126px;
+  }
+  .msgList {
+    top: 248px;
+    right: 40px;
+    width: 736px;
+  }
+  .msgList h4 {
+    padding-right: 64px;
+    height: 40px;
+    font-family: PingFangSC, PingFang SC;
+    font-weight: 500;
+    font-size: 32px;
+    line-height: 40px;
+    margin-bottom: 18px;
+  }
+  .msgListItem {
+    display: flex;
+    align-items: center;
+    height: 40px;
+    margin-bottom: 12px;
+    font-family: PingFangSC, PingFang SC;
+    font-weight: 500;
+    font-size: 32px;
+    color: #333333;
+    padding-right: 64px;
+  }
+} 
+.rotate {
+  transform: rotate(90deg);
+}
+@media screen and (orientation: landscape) {
+  /*横屏...*/
+}
 </style>

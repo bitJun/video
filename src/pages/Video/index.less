@@ -1,73 +1,3 @@
-<template>
-  <!-- horizontal -->
-  <div
-    class="main"
-    ref="scrollContainer"
-  >
-    <div
-      class="info"
-      v-if="windowType == 'portrait'"
-    >
-      <img
-        :src="bg"
-        class="portraitimg"
-      />
-    </div>
-    <div
-      v-else class="info"
-    >
-      <img
-        :src="bgInfo"
-        class="fullimg"
-      />
-    </div>
-  </div>
-</template>
-<script setup>
-  import { useRouter } from 'vue-router';
-  import { ref, onMounted, onUnmounted } from 'vue';
-  import bgInfo from '@/assets/images/bg.jpg';
-  import bg from '@/assets/images/bgInfo.jpg';
-  const scrollContainer = ref(null);
-  const windowType = ref('');
-  const width = ref(0);
-  const height = ref(0);
-  const router = useRouter();
-
-  onUnmounted(() => {
-    scrollContainer.value = window.removeEventListener('scroll', handleScroll);
-  });
-
-  onMounted(()=>{
-    resize();
-    scrollContainer.value.addEventListener('scroll', handleScroll);
-    window.addEventListener("resize", ()=>{
-      resize();
-    });
-  })
-
-  const handleScroll = () => {
-    const { scrollTop, clientHeight, scrollHeight } = scrollContainer.value;
-    if (scrollTop + clientHeight >= scrollHeight - 20) {
-      console.log(123)
-      setTimeout(()=>{
-        router.push('/card')
-      }, 300)
-    }
-  };
-
-  const checkOrientation = () => {
-    width.value = window.innerWidth;
-    height.value = window.innerHeight;
-    return width.value > height.value? 'landscape' : 'portrait';
-  }
-
-  const resize = () => {
-    let type = checkOrientation();
-    windowType.value = type;
-  }
-</script>
-<style lang="less" scoped>
 .box {
   position: relative;
   width: auto;
@@ -83,6 +13,11 @@
   position: absolute;
   bottom: 52px;
   left: 0;
+}
+.container {
+  height: 100vh;
+  width: 100vw;
+  overflow-x: scroll;
 }
 .main {
   display: flex;
@@ -140,11 +75,15 @@
   height: 63px;
 }
 .info {
-  width: auto;
+  width: 100%;
+  height: auto;
 }
 .fullimg {
   width: auto;
   height: 100vh;
+}
+.horizontalimg {
+  height: 100%;
 }
 @media screen and (orientation: portrait) {
   .main {
@@ -163,8 +102,8 @@
     width: 100% !important;
   }
   .info {
-    // overflow-y: scroll;
-    // height: 100%;
+    overflow-y: scroll;
+    height: 100%;
   }
   .msgList {
     position: absolute;
@@ -214,4 +153,3 @@
 @media screen and (orientation: landscape) {
   /*横屏...*/
 }
-</style>
