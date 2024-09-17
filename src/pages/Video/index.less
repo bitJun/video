@@ -69,6 +69,7 @@
 .actions {
   display: flex;
   justify-content: flex-end;
+  z-index: 9999;
 }
 .actions_item {
   width: 136px;
@@ -110,11 +111,18 @@
     bottom: -400px;
     left: -760px;
     width: 368px;
+    z-index: 199;
+  }
+  .box {
+    overflow: hidden;
   }
   .action {
-    bottom: -400px;
-    left: -560px;
+    bottom: 0;
+    left: -200px;
     transform: rotate(90deg);
+    width: 544px;
+    height: 126px;
+    z-index: 99;
   }
   .actions_item,
   .action_item {

@@ -3,7 +3,7 @@
     :class="[windowType == 'portrait' ? 'container' : 'main']"
     ref="scrollContainer"
   >
-    <div v-if="!visable">
+    <div>
       <img
         :src="bg"
         v-if="windowType == 'portrait'"
@@ -15,7 +15,7 @@
         class="horizontalimg"
       />
     </div>
-    <div v-else>
+    <div v-if="visable">
       <div class="box" v-if="windowType == 'portrait'">
         <img
           :src="blessportraitImg[blessId]"
@@ -34,7 +34,7 @@
           class="img"
           v-if="!blessId"
         />
-        <div class="action" v-if="show">
+        <div class="action" v-if="show && !blessId">
           <img
             :src="choose"
             class="action_item"
@@ -55,11 +55,10 @@
             />
             {{item.name}}
           </div>
-          <div class="actions">
+          <div class="actions" @click="onSubmit()">
             <img
               :src="submit"
               class="actions_item"
-              @click="onSubmit()"
             />
           </div>
         </div>
@@ -82,7 +81,7 @@
           class="img"
           v-if="!blessId"
         />
-        <div class="action" v-if="show">
+        <div class="action" v-if="show && !blessId">
           <img
             :src="choose"
             class="action_item"
@@ -240,8 +239,8 @@
     const { scrollTop, clientHeight, scrollHeight } = scrollContainer.value;
     if (scrollTop + clientHeight >= scrollHeight - 20) {
       setTimeout(()=>{
-        router.push('/card')
-        // visable.value = true;
+        // router.push('/card')
+        visable.value = true;
       }, 300)
     }
     if (scrollTop == 0) {
@@ -264,6 +263,7 @@
   }
 
   const onSubmit = () => {
+    show.value = true;
     blessId.value = id.value;
   }
 
