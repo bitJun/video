@@ -21,32 +21,32 @@
       />
       <img
         :src="playIcon"
-        class="play2"
+        class="play2 rotate"
         @click="onShowVideo(2)"
       />
       <img
         :src="playIcon"
-        class="play3"
+        class="play3 rotate"
         @click="onShowVideo(3)"
       />
       <img
         :src="playIcon"
-        class="play4"
+        class="play4 rotate"
         @click="onShowVideo(4)"
       />
       <img
         :src="playIcon"
-        class="play5"
+        class="play5 rotate"
         @click="onShowVideo(5)"
       />
       <img
         :src="playIcon"
-        class="play6"
+        class="play6 rotate"
         @click="onShowVideo(6)"
       />
       <img
         :src="playIcon"
-        class="play7"
+        class="play7 rotate"
         @click="onShowVideo(7)"
       />
     </div>
@@ -155,6 +155,11 @@
     </div>
   </div>
   <div class="video" :style="{display: show1 ? 'block' : 'none'}">
+    <img
+      :src="closeIcon"
+      class="close_icon"
+      @click="onClose()"
+    />
     <div style="width: 100%;height: 100%" id="J_prismPlayer"></div>
   </div>
 </template>
@@ -189,6 +194,7 @@
   import bgInfo from '@/assets/images/bg.jpg';
   import bg from '@/assets/images/bgInfo.jpg';
   import playIcon from '@/assets/images/play.png';
+  import closeIcon from '@/assets/images/close.png';
   const router = useRouter();
   const show = ref(true);
   const show1 = ref(false);
@@ -330,6 +336,10 @@
         suspendTime = time;
       })
     });
+  }
+
+  const onClose = () => {
+    show1.value = false;
   }
 
   const handleScroll = () => {
