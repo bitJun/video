@@ -3,7 +3,7 @@
     :class="[windowType == 'portrait' ? 'container' : 'main']"
     ref="scrollContainer"
   >
-    <div>
+    <div class="content">
       <img
         :src="bg"
         v-if="windowType == 'portrait'"
@@ -13,6 +13,41 @@
         v-else
         :src="bgInfo"
         class="horizontalimg"
+      />
+      <img
+        :src="playIcon"
+        class="play1 rotate"
+        @click="onShowVideo(1)"
+      />
+      <img
+        :src="playIcon"
+        class="play2"
+        @click="onShowVideo(2)"
+      />
+      <img
+        :src="playIcon"
+        class="play3"
+        @click="onShowVideo(3)"
+      />
+      <img
+        :src="playIcon"
+        class="play4"
+        @click="onShowVideo(4)"
+      />
+      <img
+        :src="playIcon"
+        class="play5"
+        @click="onShowVideo(5)"
+      />
+      <img
+        :src="playIcon"
+        class="play6"
+        @click="onShowVideo(6)"
+      />
+      <img
+        :src="playIcon"
+        class="play7"
+        @click="onShowVideo(7)"
       />
     </div>
     <div v-if="visable">
@@ -119,6 +154,9 @@
       </div>
     </div>
   </div>
+  <div class="video" :style="{display: show1 ? 'block' : 'none'}">
+    <div style="width: 100%;height: 100%" id="J_prismPlayer"></div>
+  </div>
 </template>
 <script setup>
   import { ref, onMounted, onUnmounted, nextTick } from 'vue';
@@ -150,8 +188,10 @@
   import uncheck from '@/assets/images/uncheck.png';
   import bgInfo from '@/assets/images/bg.jpg';
   import bg from '@/assets/images/bgInfo.jpg';
+  import playIcon from '@/assets/images/play.png';
   const router = useRouter();
   const show = ref(true);
+  const show1 = ref(false);
   const visable = ref(false);
   const scrollContainer = ref(null);
   const blessList = ref([
@@ -199,6 +239,22 @@
   const width = ref(0);
   const imgHeight = ref(0);
 
+  const state = ref({
+    player: '',          //播放器
+    videoUrl: '',        //视频地址
+    videoTitle:'',       //视频标题
+  });
+
+  const videoObj = ref({
+    1: 'http://v.funvideo.autumnvioce.cn/vod-e50747/sv/45128070-191f65cedc2/45128070-191f65cedc2.mp4',
+    2: 'http://v.funvideo.autumnvioce.cn/vod-e50747/sv/5a2f8409-191f65cedab/5a2f8409-191f65cedab.mp4',
+    3: 'http://v.funvideo.autumnvioce.cn/vod-e50747/sv/65273bc4-191f65c7f63/65273bc4-191f65c7f63.mp4',
+    4: 'http://v.funvideo.autumnvioce.cn/vod-e50747/sv/60d0ebff-191f61b124b/60d0ebff-191f61b124b.mp4',
+    5: 'http://v.funvideo.autumnvioce.cn/vod-e50747/sv/49e68384-191f61b1207/49e68384-191f61b1207.mp4',
+    6: 'http://v.funvideo.autumnvioce.cn/vod-e50747/sv/3b4630cf-191f500ce41/3b4630cf-191f500ce41.mp4',
+    7: 'http://v.funvideo.autumnvioce.cn/vod-e50747/sv/f912776-191ee501e8e/f912776-191ee501e8e.mp4'
+  })
+
   const list = ref([
     {
       url: img1
@@ -233,7 +289,48 @@
     window.addEventListener("resize", ()=>{
       resize();
     });
-  })
+  });
+
+  const onShowVideo = (key) => {
+    state.value.videoUrl = videoObj.value[key];
+    show1.value = true;
+    console.log('videoObj[key]', videoObj.value[key], key)
+    state.value.player = new Aliplayer({
+      id: "J_prismPlayer",
+      source: videoObj.value[key],
+      width: "100%",
+      height: "100%",
+      autoplay: true,
+      preload: false,
+      isLive: false
+    }, function (player) {
+      //定义变量保存时间
+      let before = 0;
+      //定义变量保存计时器时间
+      let time = 0;
+      //保存点击按钮暂停的时间
+      let suspendTime = 0;
+      let timer = undefined
+      player.on('play', function () {
+        //获取相对的时间
+        before = new Date().getTime();
+        timer = setInterval(() => {
+          //实时时间
+          let now = new Date().getTime();
+          //计时器时间 = 实时时间 - 相对时间 + 点击暂停按钮时保存的时间
+          time = now - before + suspendTime;
+          state.duration = time
+          //把处理过的时间显示到content标签中
+        }, 1000 / 60);
+      })
+      player.on('pause', function () {
+        //停止计时器
+        clearInterval(timer);
+        //储存点击暂停的时间
+        suspendTime = time;
+      })
+    });
+  }
 
   const handleScroll = () => {
     const { scrollTop, clientHeight, scrollHeight } = scrollContainer.value;
