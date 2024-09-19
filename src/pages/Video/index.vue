@@ -59,7 +59,7 @@
         />
         <div class="action">
           <img
-            :src="share"
+            :src="shareImg"
             class="action_item"
             v-if="blessId"
           />
@@ -71,7 +71,7 @@
         />
         <div class="action" v-if="show && !blessId">
           <img
-            :src="choose"
+            :src="chooseImg"
             class="action_item"
             @click="onChoose()"
           />
@@ -90,12 +90,12 @@
             />
             {{item.name}}
           </div>
-          <div class="actions" @click="onSubmit()">
-            <img
-              :src="submit"
-              class="actions_item"
-            />
-          </div>
+        </div>
+        <div class="action" @click="onSubmit()" v-if="!show && !blessId">
+          <img
+            :src="enterImg"
+            class="actions_item"
+          />
         </div>
       </div>
       <div class="box" v-else>
@@ -195,6 +195,9 @@
   import bg from '@/assets/images/bgInfo.jpg';
   import playIcon from '@/assets/images/play.png';
   import closeIcon from '@/assets/images/close.png';
+  import enterImg from '@/assets/images/enter.png';
+  import shareImg from '@/assets/images/shareportrait.png';
+  import chooseImg from '@/assets/images/chooseportrait.png';
   const router = useRouter();
   const show = ref(true);
   const show1 = ref(false);

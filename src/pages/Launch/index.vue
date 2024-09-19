@@ -9,7 +9,11 @@
         :src="titleImg"
         class="title"
       />
-      <div class="enter" @click="onEnter()">Enter</div>
+      <img
+        :src="enterImg"
+        class="enter "
+        @click="onEnter()"
+      />
     </div>
   </div>
 </template>
@@ -18,6 +22,7 @@
   import { ref, onMounted, reactive, nextTick } from 'vue';
   import coverImg from '@/assets/images/cover.png';
   import titleImg from '@/assets/images/title.png';
+  import enterImg from '@/assets/images/enter.png';
   const direction = ref('Vertical');
   const height = ref(0);
   const width = ref(0);
@@ -62,50 +67,44 @@
   height: 100vh;
 }
 .title {
-  width: 100%;
-  height: auto;
+  width: 333px;
+  height: 100vh;
   position: absolute;
-  bottom: 52px;
-  left: 0;
+  top: 0;
+  left: 113px;
 }
 .enter {
   position: absolute;
-  right: 20px;
-  bottom: 20px;
+  left: 34px;
+  bottom: 40px;
   color: #ffffff;
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 120px;
-  height: 36px;
-  border-radius: 75px;
-  background-color: orange;
+  width: 136px;
+  height: auto;
 }
-@media screen and (orientation: portrait) {
-  .main {
-    transform-origin:top left;
-    transform: rotate(90deg) translateY(-100%);
-    width: 100vh !important;
-    height: 100vw !important; 
-    position: absolute;
-    top: 0;
-  }
-  .title {
-    bottom: 100px;
-  }
-  .box .coverImg {
-    object-fit: cover;
-    width: 100vh !important;
-    height: 100vw !important; 
-  }
-  .enter {
-    position: absolute;
-    right: 80px;
-    bottom: 80px;
-    height: 60px;
-    width: 180px;
-  }
-} 
+// @media screen and (orientation: portrait) {
+//   .main {
+//     transform-origin:top left;
+//     transform: rotate(90deg) translateY(-100%);
+//     width: 100vh !important;
+//     height: 100vw !important; 
+//     position: absolute;
+//     top: 0;
+//   }
+//   .title {
+//     bottom: 100px;
+//   }
+//   .box .coverImg {
+//     object-fit: cover;
+//     width: 100vh !important;
+//     height: 100vw !important; 
+//   }
+// } 
+.rotate {
+  transform: rotate(-90deg);
+}
 @media screen and (orientation: landscape) {
   /*横屏...*/
 }
