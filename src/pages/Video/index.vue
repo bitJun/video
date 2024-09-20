@@ -16,37 +16,37 @@
       />
       <img
         :src="playIcon"
-        class="play1 rotate"
+        class="play1"
         @click="onShowVideo(1)"
       />
       <img
         :src="playIcon"
-        class="play2 rotate"
+        class="play2"
         @click="onShowVideo(2)"
       />
       <img
         :src="playIcon"
-        class="play3 rotate"
+        class="play3"
         @click="onShowVideo(3)"
       />
       <img
         :src="playIcon"
-        class="play4 rotate"
+        class="play4"
         @click="onShowVideo(4)"
       />
       <img
         :src="playIcon"
-        class="play5 rotate"
+        class="play5"
         @click="onShowVideo(5)"
       />
       <img
         :src="playIcon"
-        class="play6 rotate"
+        class="play6"
         @click="onShowVideo(6)"
       />
       <img
         :src="playIcon"
-        class="play7 rotate"
+        class="play7"
         @click="onShowVideo(7)"
       />
     </div>
@@ -193,7 +193,7 @@
   import uncheck from '@/assets/images/uncheck.png';
   import bgInfo from '@/assets/images/bg.jpg';
   import bg from '@/assets/images/bgInfo.jpg';
-  import playIcon from '@/assets/images/play.png';
+  import playIcon from '@/assets/images/playIcon.png';
   import closeIcon from '@/assets/images/close.png';
   import enterImg from '@/assets/images/enter.png';
   import shareImg from '@/assets/images/shareportrait.png';
